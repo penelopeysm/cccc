@@ -1,10 +1,9 @@
 (executable
  (public_name cccc)
  (name main)
- (libraries cccc))
+ (libraries cccc climate))
 
 (executable
  (public_name ccccd)
  (name driver)
- (libraries climate)
- )
+ (libraries climate))
