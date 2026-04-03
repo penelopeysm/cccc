@@ -18,6 +18,14 @@ eval $(opam env)
 dune build
 ```
 
+There's a small shell script to run the tests:
+
+```bash
+./runtests --chapter 1
+```
+
+where any arguments are just passed on to the test runner (inside `writing-a-c-compiler-tests/`).
+
 # Extra stuff
 
 I'm trying to take notes as I go along. These will be stored in [`NOTES.md`](./NOTES.md).

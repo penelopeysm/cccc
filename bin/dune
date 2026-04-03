@@ -5,4 +5,6 @@
 
 (executable
  (public_name ccccd)
- (name driver))
+ (name driver)
+ (libraries climate)
+ )

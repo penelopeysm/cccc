@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+dune build
+./writing-a-c-compiler-tests/test_compiler _build/default/bin/driver.exe "$@"
