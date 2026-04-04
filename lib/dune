@@ -1,2 +1,8 @@
 (library
- (name cccc))
+ (name cccc)
+ (libraries ANSITerminal))
+
+(ocamllex lexer)
+
+(menhir
+ (modules parser))

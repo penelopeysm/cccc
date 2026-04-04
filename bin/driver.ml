@@ -19,7 +19,8 @@ let try_compilation_stage (command : string) (stage_name : string)
     exit exit_code
   end
 
-let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool) : unit =
+let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
+    ~(dump_ast : bool) : unit =
   (* Get name of preprocessed file *)
   let preproc_fname = replace_extension fname ".i" in
   let preproc_command =
@@ -30,8 +31,10 @@ let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool) : unit =
   (* Run our own compiler! *)
   let assembly_fname = replace_extension fname ".s" in
   (* let compiler_command = (Printf.sprintf "clang -S -O %s -o %s" preproc_fname assembly_fname) in *)
+  let extra_flags = if dump_ast then "--dump-ast" else "" in
   let compiler_command =
-    Printf.sprintf "dune exec cccc -- %s -o %s" preproc_fname assembly_fname
+    Printf.sprintf "dune exec cccc -- %s -o %s %s" preproc_fname assembly_fname
+      extra_flags
   in
   try_compilation_stage compiler_command "Compilation"
     [ preproc_fname; assembly_fname ];
@@ -59,7 +62,8 @@ let () =
     let+ fname = pos_req 0 string ~doc:"Path to the input C file"
     and+ retain_assembly =
       flag [ "a" ] ~doc:"Retain the generated assembly file"
-    and+ run = flag [ "r" ] ~doc:"Run the executable after compilation" in
-    main ~fname ~retain_assembly ~run
+    and+ run = flag [ "r" ] ~doc:"Run the executable after compilation"
+    and+ dump_ast = flag [ "dump-ast" ] ~doc:"Dump the AST to stderr" in
+    main ~fname ~retain_assembly ~run ~dump_ast
   in
   Command.run command
