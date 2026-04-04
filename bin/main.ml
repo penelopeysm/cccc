@@ -7,9 +7,6 @@ let main ~(input_fname : string) ~(output_fname : string option)
       let lexbuf = Lexing.from_channel inx in
       let ast = Parser.programme Lexer.read lexbuf in
       if dump_ast then Ast.pp_t ast;
-
-      prerr_endline Platform.system;
-
       let asm = ast |> Asm.lower |> Emit.emit in
       match output_fname with
       | Some fname ->
