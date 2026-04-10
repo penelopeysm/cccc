@@ -3,9 +3,12 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="color-scheme" content="light dark" />
         <title>CCCC</title>
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css" />
+        <link rel="stylesheet" href="ctp-latte.css" />
+        <link rel="stylesheet" href="ctp-macchiato.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/clike/clike.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/gas/gas.min.js"></script>
@@ -18,17 +21,20 @@
                 box-sizing: border-box;
             }
 
+            /* catppuccin latte */
             body {
                 font-family: sans-serif;
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
+                background: rgb(239, 241, 245);
+                color: rgb(76, 79, 105);
             }
 
             header {
                 padding: 1.5rem 2rem;
                 text-align: center;
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid rgb(204, 208, 218);
             }
 
             header h1 {
@@ -38,14 +44,18 @@
 
             header p {
                 font-size: 1rem;
-                color: #888;
+                color: rgb(108, 111, 133);
                 margin-top: 0.25rem;
+            }
+
+            header a {
+                color: rgb(42, 110, 245);
             }
 
             .toggles {
                 margin-top: 0.5rem;
                 font-size: 0.95rem;
-                color: #888;
+                color: rgb(108, 111, 133);
             }
 
             .toggles label {
@@ -56,7 +66,7 @@
                 display: flex;
                 flex: 1;
                 margin: 1rem;
-                border: 1px solid #ddd;
+                border: 1px solid rgb(204, 208, 218);
                 border-radius: 4px;
                 overflow: hidden;
             }
@@ -74,12 +84,12 @@
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.08em;
-                color: #888;
-                border-bottom: 1px solid #ddd;
+                color: rgb(108, 111, 133);
+                border-bottom: 1px solid rgb(204, 208, 218);
             }
 
             .pane + .pane {
-                border-left: 1px solid #ddd;
+                border-left: 1px solid rgb(204, 208, 218);
             }
 
             .CodeMirror {
@@ -87,6 +97,43 @@
                 height: auto;
                 font-size: 1rem;
                 line-height: 1.5;
+            }
+
+            /* catppuccin macchiato */
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background: rgb(36, 39, 58);
+                    color: rgb(202, 211, 245);
+                }
+
+                header {
+                    border-bottom-color: rgb(91, 96, 120);
+                }
+
+                header p {
+                    color: rgb(165, 173, 206);
+                }
+
+                header a {
+                    color: rgb(138, 173, 244);
+                }
+
+                .toggles {
+                    color: rgb(165, 173, 206);
+                }
+
+                .container {
+                    border-color: rgb(91, 96, 120);
+                }
+
+                .pane-header {
+                    color: rgb(165, 173, 206);
+                    border-bottom-color: rgb(91, 96, 120);
+                }
+
+                .pane + .pane {
+                    border-left-color: rgb(91, 96, 120);
+                }
             }
         </style>
 
@@ -122,10 +169,14 @@
             }
 
             document.addEventListener("DOMContentLoaded", () => {
+                const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+                const theme = dark ? "ctp-macchiato" : "ctp-latte";
+
                 sourceEditor = CodeMirror(document.getElementById("c-source"), {
                     value: "int main(void) {\n    return 42;\n}",
                     mode: "text/x-csrc",
                     keyMap: "vim",
+                    theme: theme,
                     lineNumbers: true,
                     tabSize: 4,
                     indentUnit: 4,
@@ -133,6 +184,7 @@
 
                 asmEditor = CodeMirror(document.getElementById("assembly"), {
                     mode: "gas",
+                    theme: theme,
                     lineNumbers: true,
                     readOnly: true,
                     tabSize: 4,
@@ -141,6 +193,12 @@
                 sourceEditor.on("change", () => {
                     clearTimeout(debounceTimer);
                     debounceTimer = setTimeout(compileSource, 300);
+                });
+
+                window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+                    const t = e.matches ? "ctp-macchiato" : "ctp-latte";
+                    sourceEditor.setOption("theme", t);
+                    asmEditor.setOption("theme", t);
                 });
 
                 currentKeyMapRadio = document.getElementById("keymap-vim");
