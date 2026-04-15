@@ -22,12 +22,16 @@ rule read =
     }
   | "--" { DECREMENT }
   | '-' { MINUS }
-  | '~' { COMPLEMENT }
+  | '~' { TILDE }
   | '(' { LEFT_PAREN }
   | ')' { RIGHT_PAREN }
   | '{' { LEFT_BRACE }
   | '}' { RIGHT_BRACE }
   | ';' { SEMICOLON }
+  | '+' { PLUS }
+  | '*' { STAR }
+  | '/' { SLASH }
+  | '%' { PERCENT }
   | eof { EOF }
   | _ { raise (Lexing_error ("Unexpected character: " ^ (Lexing.lexeme lexbuf)))
     }

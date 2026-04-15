@@ -36,6 +36,7 @@ let rec lower_exp (exp : Ast.exp) (b : Builder.t) : Ir.value =
       in
       Builder.cat_inst new_op b;
       Ir.Variable dst_var
+  | Ast.BinaryOp { op; left_operand; right_operand } -> failwith "TODO"
 
 let lower_statement (stmt : Ast.statement) : Ir.instruction list =
   let b = Builder.create () in

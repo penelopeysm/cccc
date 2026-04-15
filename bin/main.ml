@@ -45,23 +45,22 @@ let main ~(input_fname : string) ~(output_fname : string option)
   In_channel.with_open_text input_fname (fun inx ->
       let lexbuf = Lexing.from_channel inx in
       let ast = Parser.programme Lexer.read lexbuf in
-      if parse then exit 0;
-
       if dump_ast then begin
         let buf = Ast.Pp.pp ast in
         print_with_box
           [ ANSITerminal.Foreground ANSITerminal.Green ]
           "AST" (Buffer.contents buf)
       end;
-      let ir = Ir_gen.ir_of_ast ast in
-      if tacky then exit 0;
+      if parse then exit 0;
 
+      let ir = Ir_gen.ir_of_ast ast in
       if dump_ir then begin
         let buf = Ir.Pp.pp ir in
         print_with_box
           [ ANSITerminal.Foreground ANSITerminal.Blue ]
           "IR" (Buffer.contents buf)
       end;
+      if tacky then exit 0;
 
       let asm = Asm_gen.asm_of_ir ir in
       let asm_text = Emit.string_of_asm asm in
