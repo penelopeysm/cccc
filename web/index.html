@@ -173,7 +173,7 @@
                 const theme = dark ? "ctp-macchiato" : "ctp-latte";
 
                 sourceEditor = CodeMirror(document.getElementById("c-source"), {
-                    value: "int main(void) {\n    return ~2 + 9 * 3;\n}",
+                    value: "int main(void) {\n    return 1000 >> (2 + 3);\n}",
                     mode: "text/x-csrc",
                     keyMap: "vim",
                     theme: theme,
