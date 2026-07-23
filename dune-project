@@ -19,7 +19,7 @@
  (name cccc)
  (synopsis "C Compiler Compiling C")
  (description "I tried calling it cc for 'C Compiler', but that caused lots of conflicts with the system's cc.")
- (depends ocaml menhir ANSITerminal climate js_of_ocaml unix)
+ (depends ocaml menhir ANSITerminal climate js_of_ocaml)
  (tags
   ("c" "compiler")))
 
