@@ -6,4 +6,4 @@
 (executable
  (public_name ccccd)
  (name driver)
- (libraries climate))
+ (libraries climate unix))

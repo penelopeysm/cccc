@@ -9,13 +9,21 @@ I tried to call it `cc`, but that led to a ton of clashes with the system's exis
 You'll need a working installation of opam (Homebrew works for this).
 
 ```bash
-git clone --recurse-submodules git@github.com:penelopeysm/cc.git
-```
+git clone --recurse-submodules git@github.com:penelopeysm/cccc.git
 
-```bash
+# Create a local switch first if you want
+opam switch create . 5.4.1 -y
+
+# Then setup
 opam install . --deps-only
 eval $(opam env)
 dune build
+```
+
+To develop, you might want to install extra tooling:
+
+```bash
+opam install ocamlformat ocaml-lsp-server
 ```
 
 There's a small shell script to run the tests:
@@ -25,6 +33,7 @@ There's a small shell script to run the tests:
 ```
 
 where any arguments are just passed on to the test runner (inside `writing-a-c-compiler-tests/`).
+For information about what arguments are supported please refer to the textbook.
 
 # Web
 

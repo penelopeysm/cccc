@@ -19,6 +19,12 @@ let try_compilation_stage (command : string) (stage_name : string)
     exit exit_code
   end
 
+let is_arm_mac () : bool =
+  let inp = Unix.open_process_in "arch 2>/dev/null" in
+  let r = In_channel.input_all inp in
+  In_channel.close inp;
+  String.trim r = "arm64"
+
 let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
     ~(dump_ast : bool) ~(parse : bool) ~(tacky : bool) : unit =
   (* Get name of preprocessed file *)
@@ -28,6 +34,8 @@ let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
       (Filename.quote preproc_fname)
   in
   try_compilation_stage preproc_command "Preprocessing" [ preproc_fname ];
+
+  let is_arm = is_arm_mac () in
 
   (* Run our own compiler! *)
   let assembly_fname = replace_extension fname ".s" in
@@ -57,10 +65,14 @@ let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
 
   (* Run the assembler and linker in one shot *)
   let executable_fname = Filename.remove_extension fname in
-  let link_command =
-    Printf.sprintf "clang %s -o %s"
-      (Filename.quote assembly_fname)
-      (Filename.quote executable_fname)
+  let link_command = if is_arm then
+      Printf.sprintf "clang -arch x86_64 %s -o %s"
+        (Filename.quote assembly_fname)
+        (Filename.quote executable_fname)
+    else
+      Printf.sprintf "clang %s -o %s"
+        (Filename.quote assembly_fname)
+        (Filename.quote executable_fname)
   in
   try_compilation_stage link_command "Assembling and linking"
     [ preproc_fname; assembly_fname; executable_fname ];
@@ -70,7 +82,11 @@ let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
   if not retain_assembly then remove_if_exists assembly_fname;
 
   (* Optionally run the executable *)
-  if run then exit (Sys.command executable_fname) else exit 0
+  let run_command =
+    if is_arm then Printf.sprintf "arch -x86_64 %s" executable_fname
+    else executable_fname
+  in
+  if run then exit (Sys.command run_command) else exit 0
 
 let () =
   let command =
