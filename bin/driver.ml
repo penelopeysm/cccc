@@ -26,7 +26,8 @@ let is_arm_mac () : bool =
   String.trim r = "arm64"
 
 let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
-    ~(dump_ast : bool) ~(parse : bool) ~(tacky : bool) : unit =
+    ~(dump_ast : bool) ~(dump_ir : bool) ~(parse : bool) ~(tacky : bool) : unit
+    =
   (* Get name of preprocessed file *)
   let preproc_fname = replace_extension fname ".i" in
   let preproc_command =
@@ -37,35 +38,37 @@ let main ~(fname : string) ~(retain_assembly : bool) ~(run : bool)
 
   let is_arm = is_arm_mac () in
 
-  (* Run our own compiler! *)
   let assembly_fname = replace_extension fname ".s" in
 
+  (* Uncomment this to use clang *)
   (* let compiler_command = (Printf.sprintf "clang -S -O %s -o %s" preproc_fname assembly_fname) in *)
-  let extra_flags = [] in
+
+  (* Or use our own compiler! *)
   let extra_flags =
-    if dump_ast then extra_flags @ [ "--dump-ast" ] else extra_flags
-  in
-  let extra_flags =
-    if parse then extra_flags @ [ "--parse" ] else extra_flags
-  in
-  let extra_flags =
-    if tacky then extra_flags @ [ "--tacky" ] else extra_flags
+    List.filter_map Fun.id
+      [
+        (if dump_ast then Some "--dump-ast" else None);
+        (if dump_ir then Some "--dump-ir" else None);
+        (if parse then Some "--parse" else None);
+        (if tacky then Some "--tacky" else None);
+      ]
   in
   let extra_flags_string = String.concat " " extra_flags in
-
   let compiler_command =
     Printf.sprintf "dune exec cccc -- %s -o %s %s"
       (Filename.quote preproc_fname)
       (Filename.quote assembly_fname)
       extra_flags_string
   in
+
   try_compilation_stage compiler_command "Compilation"
     [ preproc_fname; assembly_fname ];
   if parse || tacky then exit 0;
 
   (* Run the assembler and linker in one shot *)
   let executable_fname = Filename.remove_extension fname in
-  let link_command = if is_arm then
+  let link_command =
+    if is_arm then
       Printf.sprintf "clang -arch x86_64 %s -o %s"
         (Filename.quote assembly_fname)
         (Filename.quote executable_fname)
@@ -98,6 +101,7 @@ let () =
       flag [ "a" ] ~doc:"Retain the generated assembly file"
     and+ run = flag [ "r" ] ~doc:"Run the executable after compilation"
     and+ dump_ast = flag [ "dump-ast" ] ~doc:"Dump the AST to stderr"
+    and+ dump_ir = flag [ "dump-ir" ] ~doc:"Dump the IR to stderr"
     and+ parse =
       flag [ "parse" ]
         ~doc:"Only perform parsing and exit silently (for testing purposes)"
@@ -106,6 +110,6 @@ let () =
         ~doc:
           "Only perform IR generation and exit silently (for testing purposes)"
     in
-    main ~fname ~retain_assembly ~run ~dump_ast ~parse ~tacky
+    main ~fname ~retain_assembly ~run ~dump_ast ~dump_ir ~parse ~tacky
   in
   Command.run command
