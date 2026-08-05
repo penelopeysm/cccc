@@ -14,7 +14,10 @@ type unary_operator = Neg | Not
 
 (* For right shift, we need SAR for signed operands and SHR for unsigned. Right
    now we only have signed operands (i.e. int literals and combinations thereof)
-   so we only have SAR. For left shift SAL and SHL are the same. *)
+   so we only have SAR. For left shift SAL and SHL are the same.
+
+   Note that `And` and `Or` are the bitwise operations, not logical.
+   *)
 type binary_operator = Add | Sub | Imul | And | Or | Xor | Sal | Sar
 
 type instruction =

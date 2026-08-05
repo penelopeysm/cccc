@@ -29,11 +29,21 @@ opam install ocamlformat ocaml-lsp-server
 There's a small shell script to run the tests:
 
 ```bash
-./runtests --chapter 1
+./runtests ARGS...
 ```
 
 where any arguments are just passed on to the test runner (inside `writing-a-c-compiler-tests/`).
-For information about what arguments are supported please refer to the textbook.
+For example, if the book says to run
+
+```
+./test_compiler /path/to/your/compiler ARGS
+```
+
+then you can run, in place of it,
+
+```
+./runtests ARGS
+```
 
 # Web
 

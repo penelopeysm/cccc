@@ -1,5 +1,7 @@
 {
   open Lexing
+  (* 'Parser' is the name of the module that menhir generates from `parser.mly`.
+   All the tokens are defined in there *)
   open Parser
   exception Lexing_error of string
 }
@@ -23,8 +25,16 @@ rule read =
   | "--" { DECREMENT }
   | "<<" { SHIFT_LEFT }
   | ">>" { SHIFT_RIGHT }
+  | "<=" { LESS_EQUAL }
+  | ">=" { GREATER_EQUAL }
+  | "==" { EQUAL }
+  | "!=" { NOT_EQUAL }
+  | "&&" { LOGICAL_AND }
+  | "||" { LOGICAL_OR }
   | '&' { AMPERSAND }
   | '|' { PIPE }
+  | '<' { LESS }
+  | '>' { GREATER }
   | '^' { CARET }
   | '-' { MINUS }
   | '~' { TILDE }
@@ -33,6 +43,7 @@ rule read =
   | '{' { LEFT_BRACE }
   | '}' { RIGHT_BRACE }
   | ';' { SEMICOLON }
+  | '!' { BANG }
   | '+' { PLUS }
   | '*' { STAR }
   | '/' { SLASH }

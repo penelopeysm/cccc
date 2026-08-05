@@ -2,7 +2,7 @@ type identifier = Identifier of { name : string }
 
 let get_identifier_name (Identifier { name }) : string = name
 
-type unary_operator = Decrement | Minus | Complement
+type unary_operator = Decrement | Minus | Complement | LogicalNot
 
 type binary_operator =
   | Add
@@ -15,6 +15,14 @@ type binary_operator =
   | BitwiseXor
   | ShiftLeft
   | ShiftRight
+  | LogicalAnd
+  | LogicalOr
+  | Equal
+  | NotEqual
+  | Less
+  | Greater
+  | LessEqual
+  | GreaterEqual
 
 type exp =
   | IntLiteral of { value : int }
@@ -48,7 +56,11 @@ end = struct
     add_indent buf indent_level;
     Buffer.add_string buf "UnaryOperator ";
     Buffer.add_string buf
-      (match op with Decrement -> "--" | Minus -> "-" | Complement -> "~");
+      (match op with
+      | Decrement -> "--"
+      | Minus -> "-"
+      | Complement -> "~"
+      | LogicalNot -> "!");
     Buffer.add_string buf "\n"
 
   let pp_binary_op (buf : Buffer.t) (op : binary_operator) (indent_level : int)
@@ -66,7 +78,15 @@ end = struct
       | BitwiseOr -> "|"
       | BitwiseXor -> "^"
       | ShiftLeft -> "<<"
-      | ShiftRight -> ">>");
+      | ShiftRight -> ">>"
+      | LogicalAnd -> "&&"
+      | LogicalOr -> "||"
+      | Equal -> "=="
+      | NotEqual -> "!="
+      | Less -> "<"
+      | Greater -> ">"
+      | LessEqual -> "<="
+      | GreaterEqual -> ">=");
     Buffer.add_string buf "\n"
 
   let rec pp_exp (buf : Buffer.t) (e : exp) (indent_level : int) : unit =

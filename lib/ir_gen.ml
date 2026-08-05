@@ -37,7 +37,8 @@ let rec lower_exp (exp : Ast.exp) (b : Builder.t) : Ir.value =
         match op with
         | Ast.Minus -> Ir.Minus
         | Ast.Complement -> Ir.Complement
-        | Ast.Decrement -> failwith "not implemented"
+        | Ast.Decrement -> failwith "not implemented: chapter 5 extra credit"
+        | Ast.LogicalNot -> failwith "not implemented: chapter 4"
       in
       let new_op =
         Ir.UnaryOp { op = ir_op; src = operand_value; dst = dst_var }
@@ -60,6 +61,7 @@ let rec lower_exp (exp : Ast.exp) (b : Builder.t) : Ir.value =
         | Ast.BitwiseXor -> Ir.BitwiseXor
         | Ast.ShiftLeft -> Ir.ShiftLeft
         | Ast.ShiftRight -> Ir.ShiftRight
+        | _ -> failwith "not implemented: chapter 4"
       in
       let new_op =
         Ir.BinaryOp
