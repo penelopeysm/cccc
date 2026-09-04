@@ -1,12 +1,10 @@
 (library
- (name cccc))
+ (name cccc)
+ (libraries core cccc_utils)
+ (preprocess
+  (pps ppx_jane)))
 
 (ocamllex lexer)
 
 (menhir
  (modules parser))
-
-(rule
- (target platform.ml)
- (action
-  (write-file platform.ml "let system = \"%{system}\"")))

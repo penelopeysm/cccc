@@ -17,6 +17,7 @@ depends: [
   "ANSITerminal"
   "climate"
   "js_of_ocaml"
+  "core" {>= "0.18"}
   "odoc" {with-doc}
 ]
 build: [

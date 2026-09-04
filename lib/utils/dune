@@ -1,0 +1,10 @@
+(library
+ (name cccc_utils)
+ (libraries core)
+ (preprocess
+  (pps ppx_jane)))
+
+(rule
+ (target platform.ml)
+ (action
+  (write-file platform.ml "let system = \"%{system}\"")))

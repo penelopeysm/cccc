@@ -2,10 +2,12 @@ open Cccc
 open Js_of_ocaml
 
 let compile_source (source : string) : string =
-  let lexbuf = Lexing.from_string source in
-  let ast = Parser.programme Lexer.read lexbuf in
-  let ir = Ir_gen.ir_of_ast ast in
-  let asm = Asm_gen.asm_of_ir ir in
-  Asm.Emit.string_of_asm asm
+  source
+  |> Lexing.from_string
+  |> Parser.programme Lexer.read
+  |> Ir_gen.ir_of_ast
+  |> Asm_gen.asm_of_ir
+  |> Asm.Emit.string_of_asm
+;;
 
 let () = Js.export "compile" compile_source

@@ -6,13 +6,18 @@ I tried to call it `cc`, but that led to a ton of clashes with the system's exis
 
 # Setup
 
-You'll need a working installation of opam (Homebrew works for this).
+You'll need a working installation of opam (choose your favourite package manager; for example, Homebrew works for this).
+
+I _think_ that as of 2026-09-05 the code should be compilable with standard OCaml, but at some point in time I'm going to start using [OxCaml](https://oxcaml.org/) features.
+(For clarity, I work at Jane Street, and this side project is a small way for me to learn more about what my compiler friends are doing!)
+Anyway, it's very likely that when that happens, I'll forget to update the README to mention this.
+So if you want to clone this locally, you may as well start using OxCaml.
 
 ```bash
 git clone --recurse-submodules git@github.com:penelopeysm/cccc.git
 
-# Create a local switch first if you want
-opam switch create . 5.4.1 -y
+# Create a local switch
+opam switch create . 5.2.0+ox --repos ox=git+https://github.com/oxcaml/opam-repository.git,default -y
 
 # Then setup
 opam install . --deps-only
@@ -23,7 +28,7 @@ dune build
 To develop, you might want to install extra tooling:
 
 ```bash
-opam install ocamlformat ocaml-lsp-server
+opam install ocamlformat ocaml-lsp-server merlin utop
 ```
 
 There's a small shell script to run the tests:
@@ -48,6 +53,7 @@ then you can run, in place of it,
 # Web
 
 There's a small website, in `web/`, in which the OCaml code is compiled to JavaScript using `js_of_ocaml` and run in the browser.
+(The frontend was vibe coded, I've done enough web apps in my time and I didn't really consider it important to handwrite it :-).)
 
 You can either view it at https://pysm.dev/cccc, or to run it locally, do:
 
