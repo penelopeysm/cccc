@@ -1,4 +1,4 @@
-C compiler compiling C (following Nora Sandler's *Writing a C Compiler*).
+C compiler compiling C (following [Nora Sandler's *Writing a C Compiler*](https://nostarch.com/writing-c-compiler)).
 
 # Why the name?
 
