@@ -9,12 +9,15 @@ jobs:
     runs-on: macos-26-intel
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
-      - name: Set up OCaml
+      - name: Set up OxCaml
         uses: ocaml/setup-ocaml@v3
         with:
-          ocaml-compiler: "5.4"
+          opam-repositories: |
+            ox: git+https://github.com/oxcaml/opam-repository.git
+            default: git+https://github.com/ocaml/opam-repository.git
+          ocaml-compiler: "5.2.0+ox"
 
       - name: Install dependencies
         run: opam install . --deps-only --with-test
